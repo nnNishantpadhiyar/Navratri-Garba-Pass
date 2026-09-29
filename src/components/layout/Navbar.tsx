@@ -19,7 +19,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Garba Events', path: '/events' },
-    { label: 'Pass Types', path: '/garba-passes' },
     { label: 'Season Passes', path: '/season-passes' },
     { label: '2026 Guide', path: '/navratri-2026-guide' },
     { label: 'Blog', path: '/blog' },
