@@ -3,7 +3,6 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { HomePage } from './pages/HomePage';
 import { EventDetailPage } from './pages/EventDetailPage';
-import { LocationPage } from './pages/LocationPage';
 import { PassesPage } from './pages/PassesPage';
 import { SeasonPassesPage } from './pages/SeasonPassesPage';
 import { GuidePage } from './pages/GuidePage';
@@ -13,23 +12,29 @@ import { FAQPage } from './pages/FAQPage';
 import { ContactPage } from './pages/ContactPage';
 import { LegalPage } from './pages/LegalPage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { BookingModal } from './components/booking/BookingModal';
 import { ShareModal } from './components/social/ShareModal';
 import { GARBA_EVENTS } from './data/garbaEvents';
-import { LOCATION_DATA } from './data/locationData';
-import { GarbaEvent, LocationSlug, PassTier, BookingDetails } from './types';
+import { GarbaEvent, PassTier, BookingDetails } from './types';
 import { Search, X } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname || '/');
-  const [selectedLocation, setSelectedLocation] = useState<LocationSlug | 'all'>('all');
   const [eventsList, setEventsList] = useState<GarbaEvent[]>(GARBA_EVENTS);
   
   // Modal States
-  const [bookingTarget, setBookingTarget] = useState<{ event: GarbaEvent; pass?: PassTier } | null>(null);
   const [shareTarget, setShareTarget] = useState<GarbaEvent | null>(null);
   const [searchModalOpen, setSearchModalOpen] = useState<boolean>(false);
   const [globalSearchInput, setGlobalSearchInput] = useState<string>('');
+
+  // Central WhatsApp Booking Handler for number 916767676549
+  const handleWhatsAppBook = (eventName?: string, venue?: string) => {
+    const text = encodeURIComponent(
+      `🪔 *NAVRATRI GARBA PASS BOOKING 2026*\n` +
+      `Hi, I want to book Garba Passes for ${eventName ? `*${eventName}*` : 'Navratri 2026'} ${venue ? `at ${venue}` : 'in Ahmedabad'}.\n` +
+      `Please share pass availability and payment details!`
+    );
+    window.open(`https://wa.me/916767676549?text=${text}`, '_blank');
+  };
 
   // Initial Bookings Ledger state for Admin Dashboard
   const [bookingsLedger, setBookingsLedger] = useState<BookingDetails[]>([
@@ -48,32 +53,11 @@ export const App: React.FC = () => {
       totalPaid: 809,
       customerName: 'Harshil Shah',
       customerEmail: 'harshil@example.com',
-      customerPhone: '9898012345',
+      customerPhone: '916767676549',
       qrCodeData: '{"id":"GB-2026-849201","event":"Mirchi Rock & Dhol 2026"}',
       bookingTimestamp: '2026-09-25T14:30:00Z',
       paymentMethod: 'UPI',
       status: 'CONFIRMED'
-    },
-    {
-      bookingId: 'GB-2026-302194',
-      eventId: 'evt-suvarn-navratri-2026',
-      eventName: 'Suvarn Navratri Mahotsav 2026',
-      eventDate: '2026-10-12',
-      venueName: 'Rajpath Club Lawn',
-      address: 'SG Highway, Satellite, Ahmedabad',
-      passTierId: 'pass-sn-season',
-      passTierName: '9-Night Suvarn Season Pass',
-      quantity: 2,
-      unitPrice: 3999,
-      discountAmount: 0,
-      totalPaid: 7998,
-      customerName: 'Pooja Patel',
-      customerEmail: 'pooja@example.com',
-      customerPhone: '9825098765',
-      qrCodeData: '{"id":"GB-2026-302194","event":"Suvarn Navratri Mahotsav"}',
-      bookingTimestamp: '2026-09-26T10:15:00Z',
-      paymentMethod: 'CARD',
-      status: 'USED'
     }
   ]);
 
@@ -92,11 +76,6 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Handle new booking
-  const handleBookingComplete = (newBooking: BookingDetails) => {
-    setBookingsLedger(prev => [newBooking, ...prev]);
-  };
-
   // Render main page content based on current route
   const renderCurrentView = () => {
     // 1. Individual Event Detail Page: /events/:slug
@@ -107,7 +86,7 @@ export const App: React.FC = () => {
         return (
           <EventDetailPage
             event={eventObj}
-            onBookPass={(evt, pass) => setBookingTarget({ event: evt, pass })}
+            onBookPass={(evt) => handleWhatsAppBook(evt.name, evt.venue)}
             onShareEvent={(evt) => setShareTarget(evt)}
             onNavigate={navigateTo}
           />
@@ -115,31 +94,13 @@ export const App: React.FC = () => {
       }
     }
 
-    // 2. Location Specific SEO Pages: /garba-pass-:slug
-    if (currentPath.startsWith('/garba-pass-')) {
-      const locSlug = currentPath.replace('/garba-pass-', '') as LocationSlug;
-      const locInfo = LOCATION_DATA[locSlug];
-      if (locInfo) {
-        return (
-          <LocationPage
-            locationInfo={locInfo}
-            events={eventsList}
-            onSelectEvent={(evt) => navigateTo(`/events/${evt.slug}`)}
-            onBookPass={(evt, pass) => setBookingTarget({ event: evt, pass })}
-            onShareEvent={(evt) => setShareTarget(evt)}
-            onNavigate={navigateTo}
-          />
-        );
-      }
-    }
-
-    // 3. Blog Post Detail View: /blog/:slug
+    // 2. Blog Post Detail View: /blog/:slug
     if (currentPath.startsWith('/blog/')) {
       const blogSlug = currentPath.replace('/blog/', '');
       return <BlogPostPage slug={blogSlug} onNavigate={navigateTo} />;
     }
 
-    // 4. Standard Top-Level Routes
+    // 3. Standard Top-Level Routes
     switch (currentPath) {
       case '/events':
       case '/garba-events-ahmedabad':
@@ -147,11 +108,10 @@ export const App: React.FC = () => {
           <HomePage
             events={eventsList}
             onSelectEvent={(evt) => navigateTo(`/events/${evt.slug}`)}
-            onBookPass={(evt, pass) => setBookingTarget({ event: evt, pass })}
+            onBookPass={(evt) => handleWhatsAppBook(evt.name, evt.venue)}
             onShareEvent={(evt) => setShareTarget(evt)}
             onNavigate={navigateTo}
-            selectedLocation={selectedLocation}
-            onLocationChange={setSelectedLocation}
+            onWhatsAppBook={handleWhatsAppBook}
           />
         );
 
@@ -159,7 +119,7 @@ export const App: React.FC = () => {
         return (
           <PassesPage
             events={eventsList}
-            onBookPass={(evt, pass) => setBookingTarget({ event: evt, pass })}
+            onBookPass={(evt) => handleWhatsAppBook(evt.name, evt.venue)}
             onNavigate={navigateTo}
           />
         );
@@ -168,7 +128,7 @@ export const App: React.FC = () => {
         return (
           <SeasonPassesPage
             events={eventsList}
-            onBookPass={(evt, pass) => setBookingTarget({ event: evt, pass })}
+            onBookPass={(evt) => handleWhatsAppBook(evt.name, evt.venue)}
             onNavigate={navigateTo}
           />
         );
@@ -210,11 +170,10 @@ export const App: React.FC = () => {
           <HomePage
             events={eventsList}
             onSelectEvent={(evt) => navigateTo(`/events/${evt.slug}`)}
-            onBookPass={(evt, pass) => setBookingTarget({ event: evt, pass })}
+            onBookPass={(evt) => handleWhatsAppBook(evt.name, evt.venue)}
             onShareEvent={(evt) => setShareTarget(evt)}
             onNavigate={navigateTo}
-            selectedLocation={selectedLocation}
-            onLocationChange={setSelectedLocation}
+            onWhatsAppBook={handleWhatsAppBook}
           />
         );
     }
@@ -227,16 +186,8 @@ export const App: React.FC = () => {
       <Navbar
         currentPath={currentPath}
         onNavigate={navigateTo}
-        selectedLocation={selectedLocation}
-        onLocationChange={(loc) => {
-          setSelectedLocation(loc);
-          if (loc !== 'all') {
-            navigateTo(`/garba-pass-${loc}`);
-          } else {
-            navigateTo('/events');
-          }
-        }}
         onOpenSearch={() => setSearchModalOpen(true)}
+        onWhatsAppBook={() => handleWhatsAppBook()}
       />
 
       {/* Main Dynamic View */}
@@ -246,16 +197,6 @@ export const App: React.FC = () => {
 
       {/* SEO Footer */}
       <Footer onNavigate={navigateTo} />
-
-      {/* Booking Modal */}
-      {bookingTarget && (
-        <BookingModal
-          event={bookingTarget.event}
-          initialPass={bookingTarget.pass}
-          onClose={() => setBookingTarget(null)}
-          onBookingComplete={handleBookingComplete}
-        />
-      )}
 
       {/* Social Share Modal */}
       {shareTarget && (

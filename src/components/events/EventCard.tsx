@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, Clock, Star, ArrowRight, ShieldCheck, Ticket, Share2 } from 'lucide-react';
+import { Calendar, MapPin, Clock, Star, Ticket, Share2 } from 'lucide-react';
 import { GarbaEvent, EventBadge } from '../../types';
 
 interface EventCardProps {
@@ -146,7 +146,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           
           <button
             onClick={() => onBookPass(event)}
-            className="w-1/2 py-2.5 px-3 rounded-xl text-xs font-extrabold bg-gradient-to-r from-amber-500 via-rose-600 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-white shadow-md shadow-rose-950/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+            className="w-1/2 py-2.5 px-3 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-500 via-teal-600 to-amber-500 hover:from-emerald-400 hover:to-amber-400 text-white shadow-md shadow-teal-950/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
           >
             <Ticket className="w-3.5 h-3.5" />
             <span>Book Pass</span>
