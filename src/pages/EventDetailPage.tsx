@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { Calendar, Clock, MapPin, Star, Ticket, Share2, ShieldCheck, CheckCircle2, ChevronRight, PhoneCall, AlertTriangle, ArrowLeft } from 'lucide-react';
-import { GarbaEvent, PassTier } from '../types';
+import React from 'react';
+import { Calendar, Clock, MapPin, Star, Ticket, Share2, ShieldCheck, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { GarbaEvent } from '../types';
 import { SEOHead } from '../components/seo/SEOHead';
-import { PassCard } from '../components/passes/PassCard';
 
 interface EventDetailPageProps {
   event: GarbaEvent;
-  onBookPass: (event: GarbaEvent, pass?: PassTier) => void;
+  onBookPass: (event: GarbaEvent) => void;
   onShareEvent: (event: GarbaEvent) => void;
   onNavigate: (path: string) => void;
 }
@@ -17,8 +16,6 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
   onShareEvent,
   onNavigate
 }) => {
-  const [selectedPass, setSelectedPass] = useState<PassTier>(event.passes[0]);
-
   return (
     <div className="space-y-12 pb-24">
       
@@ -154,19 +151,23 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
             </div>
           </div>
 
-          {/* Available Pass Tiers Section */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-display font-extrabold text-white">Select Your Garba Pass Tier</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {event.passes.map((pass) => (
-                <PassCard
-                  key={pass.id}
-                  pass={pass}
-                  eventName={event.name}
-                  onBookNow={(p) => onBookPass(event, p)}
-                />
-              ))}
+          {/* WhatsApp Direct Pass Booking Banner */}
+          <div className="bg-gradient-to-r from-emerald-950 via-teal-950 to-purple-950 p-6 rounded-3xl border border-emerald-500/40 space-y-4 shadow-xl">
+            <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold">
+              <Ticket className="w-5 h-5" />
+              <span>OFFICIAL WHATSAPP TICKET DESK</span>
             </div>
+            <h3 className="text-2xl font-display font-extrabold text-white">Book Passes for {event.name}</h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Get instant pass availability, dates, group discount offers, and QR ticket delivery directly on WhatsApp at <strong>+91 6767676549</strong>.
+            </p>
+            <button
+              onClick={() => onBookPass(event)}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-600 to-amber-500 text-white font-extrabold text-sm shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+            >
+              <Ticket className="w-5 h-5" />
+              <span>Book Pass via WhatsApp (+91 6767676549)</span>
+            </button>
           </div>
 
           {/* Parking & Dress Code Entry Rules */}
@@ -225,7 +226,7 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
 
         {/* Right Sticky Booking Sidebar */}
         <div className="lg:col-span-1">
-          <div className="sticky top-28 bg-festive-card/90 p-6 rounded-3xl border-2 border-amber-400/80 shadow-2xl space-y-6">
+          <div className="sticky top-28 bg-festive-card/90 p-6 rounded-3xl border-2 border-emerald-500/80 shadow-2xl space-y-6">
             
             <div>
               <p className="text-xs text-purple-300 font-semibold uppercase">Official Pass Price</p>
@@ -235,40 +236,21 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
                 </span>
                 <span className="text-xs text-slate-400">/ person</span>
               </div>
-              <p className="text-[11px] text-emerald-400 mt-1 font-semibold">✓ Instant QR Pass issued to phone</p>
-            </div>
-
-            {/* Quick Pass Select */}
-            <div className="space-y-2 border-t border-purple-900/60 pt-4">
-              <label className="text-xs font-bold text-slate-200">Select Pass Type:</label>
-              <select
-                value={selectedPass.id}
-                onChange={(e) => {
-                  const p = event.passes.find(item => item.id === e.target.value);
-                  if (p) setSelectedPass(p);
-                }}
-                className="w-full bg-festive-dark border border-purple-800/60 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
-              >
-                {event.passes.map((p) => (
-                  <option key={p.id} value={p.id} className="bg-festive-dark">
-                    {p.name} — ₹{p.price}
-                  </option>
-                ))}
-              </select>
+              <p className="text-[11px] text-emerald-400 mt-1 font-semibold">✓ WhatsApp Direct Pass Confirmation</p>
             </div>
 
             {/* Primary Action Button */}
             <button
-              onClick={() => onBookPass(event, selectedPass)}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-rose-600 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-white font-extrabold text-base shadow-xl shadow-rose-950/50 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+              onClick={() => onBookPass(event)}
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-600 to-amber-500 hover:from-emerald-400 hover:to-amber-400 text-white font-extrabold text-base shadow-xl shadow-teal-950/50 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
             >
               <Ticket className="w-5 h-5" />
-              <span>Book Pass Now</span>
+              <span>Book Pass via WhatsApp</span>
             </button>
 
             <div className="text-[11px] text-purple-300 space-y-1 text-center border-t border-purple-900/60 pt-4">
-              <p>🔒 100% Encrypted & Safe Transaction</p>
-              <p>📱 Scannable Gate QR Code</p>
+              <p>📲 WhatsApp Number: <strong>+91 6767676549</strong></p>
+              <p>📱 Scannable Gate QR Pass</p>
             </div>
 
           </div>
@@ -286,11 +268,11 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
         </div>
 
         <button
-          onClick={() => onBookPass(event, selectedPass)}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-rose-600 to-purple-600 text-white font-extrabold text-xs shadow-lg flex items-center gap-1.5"
+          onClick={() => onBookPass(event)}
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-600 to-amber-500 text-white font-extrabold text-xs shadow-lg flex items-center gap-1.5"
         >
           <Ticket className="w-4 h-4" />
-          <span>Book Pass Now</span>
+          <span>Book Pass via WhatsApp</span>
         </button>
       </div>
 

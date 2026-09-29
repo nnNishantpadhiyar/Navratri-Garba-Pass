@@ -17,6 +17,7 @@ export const FAQPage: React.FC = () => {
       <SEOHead 
         title="FAQ | Navratri Garba Pass Ahmedabad 2026 Questions & Answers"
         description="Find answers to frequently asked questions about Garba passes in Ahmedabad for Navratri 2026. Prices, season passes, refunds, and gate QR entry."
+        faqSchema
       />
 
       <section className="relative pt-12 pb-16 bg-hero-pattern text-center space-y-4">

@@ -29,7 +29,7 @@ A premium, modern, high-converting Navratri Garba Pass booking web platform desi
 npm install
 
 # Start development server
-npm run dev
+  npm run dev
 
 # Build for production
 npm run build

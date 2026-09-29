@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { GarbaEvent } from '../../types';
+import { FAQ_ITEMS } from '../../data/faqData';
 
 interface SEOHeadProps {
   title?: string;
@@ -19,24 +20,42 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   faqSchema = false
 }) => {
   useEffect(() => {
-    // 1. Update Title
     document.title = title;
 
-    // 2. Meta description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', description);
-    }
+    const setMeta = (selector: string, attribute: string, value: string, create: () => HTMLMetaElement) => {
+      let element = document.querySelector<HTMLMetaElement>(selector);
+      if (!element) {
+        element = create();
+        document.head.appendChild(element);
+      }
+      element.setAttribute(attribute, value);
+    };
+    const setLink = (rel: string, href: string) => {
+      let element = document.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
+      if (!element) {
+        element = document.createElement('link');
+        element.rel = rel;
+        document.head.appendChild(element);
+      }
+      element.href = href;
+    };
+    const canonical = new URL(canonicalUrl, window.location.origin);
+    if (!canonicalUrl || canonical.pathname === '/') canonical.pathname = window.location.pathname;
+    canonical.search = '';
+    canonical.hash = '';
+    const canonicalHref = canonical.href;
 
-    // 3. Open Graph
-    let ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) ogTitle.setAttribute('content', title);
-
-    let ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) ogDesc.setAttribute('content', description);
-
-    let ogImg = document.querySelector('meta[property="og:image"]');
-    if (ogImg) ogImg.setAttribute('content', ogImage);
+    setMeta('meta[name="description"]', 'content', description, () => Object.assign(document.createElement('meta'), { name: 'description' }));
+    setMeta('meta[property="og:type"]', 'content', 'website', () => Object.assign(document.createElement('meta'), { property: 'og:type' }));
+    setMeta('meta[property="og:title"]', 'content', title, () => Object.assign(document.createElement('meta'), { property: 'og:title' }));
+    setMeta('meta[property="og:description"]', 'content', description, () => Object.assign(document.createElement('meta'), { property: 'og:description' }));
+    setMeta('meta[property="og:url"]', 'content', canonicalHref, () => Object.assign(document.createElement('meta'), { property: 'og:url' }));
+    setMeta('meta[property="og:image"]', 'content', ogImage, () => Object.assign(document.createElement('meta'), { property: 'og:image' }));
+    setMeta('meta[name="twitter:card"]', 'content', 'summary_large_image', () => Object.assign(document.createElement('meta'), { name: 'twitter:card' }));
+    setMeta('meta[name="twitter:title"]', 'content', title, () => Object.assign(document.createElement('meta'), { name: 'twitter:title' }));
+    setMeta('meta[name="twitter:description"]', 'content', description, () => Object.assign(document.createElement('meta'), { name: 'twitter:description' }));
+    setMeta('meta[name="twitter:image"]', 'content', ogImage, () => Object.assign(document.createElement('meta'), { name: 'twitter:image' }));
+    setLink('canonical', canonicalHref);
 
     // 4. Inject JSON-LD Schema
     const scriptId = 'json-ld-schema';
@@ -54,15 +73,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Navratri Garba Pass Ahmedabad 2026",
-        "url": canonicalUrl,
-        "logo": "https://garbapassahmedabad2026.com/logo.png",
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "telephone": "+91-79-4000-2026",
-          "contactType": "customer service",
-          "areaServed": "IN",
-          "availableLanguage": ["en", "gu", "hi"]
-        }
+        "url": new URL('/', canonical.origin).href
       }
     ];
 
@@ -108,6 +119,18 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       });
     }
 
+    if (faqSchema) {
+      schemaData.push({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": FAQ_ITEMS.map(({ question, answer }) => ({
+          "@type": "Question",
+          "name": question,
+          "acceptedAnswer": { "@type": "Answer", "text": answer }
+        }))
+      });
+    }
+
     script.text = JSON.stringify(schemaData);
     document.head.appendChild(script);
 
@@ -115,7 +138,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       const s = document.getElementById(scriptId);
       if (s) s.remove();
     };
-  }, [title, description, canonicalUrl, ogImage, eventSchema]);
+  }, [title, description, canonicalUrl, ogImage, eventSchema, faqSchema]);
 
   return null;
 };

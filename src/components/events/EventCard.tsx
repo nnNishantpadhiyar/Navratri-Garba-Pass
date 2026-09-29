@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, Clock, Star, Ticket, Share2 } from 'lucide-react';
+import { Calendar, MapPin, Clock, Star, Ticket, Share2, Users, ArrowRight } from 'lucide-react';
 import { GarbaEvent, EventBadge } from '../../types';
 
 interface EventCardProps {
@@ -9,151 +9,218 @@ interface EventCardProps {
   onShareEvent?: (event: GarbaEvent) => void;
 }
 
-export const EventCard: React.FC<EventCardProps> = ({
-  event,
-  onSelectEvent,
-  onBookPass,
-  onShareEvent
-}) => {
+const BADGE_CONFIG: Record<EventBadge | string, { icon: string; color: string }> = {
+  'Trending':        { icon: '🔥', color: 'rgba(217,87,59,0.25)'  },
+  'Early Bird':      { icon: '🐦', color: 'rgba(239,171,56,0.2)'  },
+  'Limited Passes':  { icon: '⚡', color: 'rgba(249,241,223,0.1)' },
+  'Almost Sold Out': { icon: '🚨', color: 'rgba(217,87,59,0.3)'   },
+  'VIP Exclusive':   { icon: '👑', color: 'rgba(239,171,56,0.18)' },
+};
 
-  const getBadgeStyle = (badge: EventBadge) => {
-    switch (badge) {
-      case 'Trending':
-        return 'bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold border-rose-400/40';
-      case 'Early Bird':
-        return 'bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold border-amber-400/40';
-      case 'Limited Passes':
-        return 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold border-purple-400/40';
-      case 'Almost Sold Out':
-        return 'bg-gradient-to-r from-red-600 to-rose-700 text-white font-bold animate-pulse border-red-400/40';
-      default:
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
-    }
-  };
+export const EventCard: React.FC<EventCardProps> = ({
+  event, onSelectEvent, onBookPass, onShareEvent,
+}) => {
+  // Derive capacity from passes array
+  const totalAvail  = event.passes.reduce((s, p) => s + (p.availableCount ?? 0), 0);
+  const totalEst    = Math.max(totalAvail * 3, 300);
+  const soldPercent = Math.min(90, Math.round(((totalEst - totalAvail) / totalEst) * 100));
+
+  const barColor =
+    soldPercent >= 75 ? '#d9573b' :
+    soldPercent >= 45 ? '#efab38' : '#10b981';
 
   return (
-    <div className="group relative bg-festive-card/90 rounded-3xl border border-purple-900/50 overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-rose-950/40 hover:border-amber-500/40 transition-all duration-300 flex flex-col h-full">
-      
-      {/* Event Header Image Container */}
-      <div className="relative h-56 overflow-hidden">
-        <img 
-          src={event.featuredImage} 
-          alt={event.name} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    <article
+      className="card-event group flex flex-col h-full"
+      role="article"
+      aria-label={`Event: ${event.name}`}
+    >
+      {/* ── Image ── */}
+      <div style={{ position: 'relative', height: '13rem', overflow: 'hidden', borderRadius: '1.25rem 1.25rem 0 0' }}>
+        <img
+          src={event.featuredImage}
+          alt={event.name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }}
           loading="lazy"
+          className="group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-festive-card via-festive-card/40 to-transparent" />
+        {/* Overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(26,24,50,0.9) 0%, rgba(26,24,50,0.2) 55%, transparent 100%)' }} />
 
-        {/* Dynamic Badges Overlay */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
-          {event.badges.map((badge) => (
-            <span 
-              key={badge}
-              className={`text-[11px] px-2.5 py-1 rounded-full shadow-md backdrop-blur-md border ${getBadgeStyle(badge)}`}
-            >
-              {badge}
-            </span>
-          ))}
+        {/* Badges */}
+        <div style={{ position: 'absolute', top: '0.75rem', left: '0.75rem', display: 'flex', gap: '0.375rem', flexWrap: 'wrap', zIndex: 10 }}>
+          {event.badges.slice(0, 2).map((badge) => {
+            const cfg = BADGE_CONFIG[badge] ?? { icon: '✨', color: 'rgba(239,171,56,0.2)' };
+            return (
+              <span
+                key={badge}
+                style={{
+                  background: cfg.color,
+                  border: '1px solid rgba(249,241,223,0.2)',
+                  backdropFilter: 'blur(8px)',
+                  borderRadius: '999px',
+                  padding: '0.2rem 0.5rem',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  color: '#f9f1df',
+                  display: 'flex', alignItems: 'center', gap: '0.25rem',
+                }}
+              >
+                {cfg.icon} {badge}
+              </span>
+            );
+          })}
         </div>
 
-        {/* Rating & Share Button */}
-        <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
+        {/* Share + Rating */}
+        <div style={{ position: 'absolute', top: '0.75rem', right: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', zIndex: 10 }}>
           {onShareEvent && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onShareEvent(event);
+              onClick={(e) => { e.stopPropagation(); onShareEvent(event); }}
+              style={{
+                width: '2rem', height: '2rem', borderRadius: '50%',
+                background: 'rgba(26,24,50,0.7)', backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(249,241,223,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'rgba(249,241,223,0.6)', cursor: 'pointer',
               }}
-              className="p-2 rounded-full bg-festive-dark/70 hover:bg-festive-dark text-white border border-purple-500/40 backdrop-blur-md transition-colors"
               title="Share Event"
             >
-              <Share2 className="w-3.5 h-3.5" />
+              <Share2 style={{ width: '0.875rem', height: '0.875rem' }} />
             </button>
           )}
-
-          <div className="flex items-center gap-1 bg-festive-dark/80 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-500/30 backdrop-blur-md">
-            <Star className="w-3.5 h-3.5 fill-amber-400" />
-            <span>{event.rating}</span>
-            <span className="text-slate-400 text-[10px]">({event.reviewCount})</span>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '0.25rem',
+            background: 'rgba(26,24,50,0.7)', backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(239,171,56,0.25)',
+            borderRadius: '999px', padding: '0.25rem 0.625rem',
+            color: '#efab38', fontSize: '0.75rem', fontWeight: 700,
+          }}>
+            <Star style={{ width: '0.8rem', height: '0.8rem', fill: '#efab38' }} />
+            {event.rating}
           </div>
         </div>
 
-        {/* Starting Price Tag Ribbon */}
-        <div className="absolute bottom-3 left-3 bg-festive-dark/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-amber-500/40 shadow-lg">
-          <p className="text-[10px] text-purple-300 uppercase font-semibold">Starting From</p>
-          <p className="text-lg font-display font-extrabold text-amber-400">
-            ₹{event.startingPrice} <span className="text-xs font-normal text-slate-300">/ pass</span>
-          </p>
+        {/* Price Tag */}
+        <div style={{ position: 'absolute', bottom: '0.75rem', left: '0.75rem', zIndex: 10 }}>
+          <div style={{
+            background: 'rgba(26,24,50,0.8)', backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(239,171,56,0.3)',
+            borderRadius: '0.75rem', padding: '0.375rem 0.75rem',
+          }}>
+            <p style={{ fontSize: '0.6rem', color: 'rgba(239,171,56,0.75)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.1rem' }}>Starting From</p>
+            <p style={{ fontSize: '1.125rem', fontWeight: 800, color: '#efab38', lineHeight: 1.2, fontFamily: 'Libre Baskerville, serif' }}>
+              ₹{event.startingPrice.toLocaleString('en-IN')}
+              <span style={{ fontSize: '0.7rem', fontWeight: 400, color: 'rgba(249,241,223,0.5)', marginLeft: '0.25rem', fontFamily: 'DM Sans, sans-serif' }}>/pass</span>
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Card Content Body */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-        
-        <div className="space-y-2">
-          {/* Location Badge */}
-          <div className="flex items-center gap-1.5 text-xs text-amber-400 font-medium">
-            <MapPin className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-            <span className="truncate">{event.venue}, {event.locationName}</span>
-          </div>
+      {/* ── Content Body ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '1.25rem', gap: '0.875rem' }}>
 
-          {/* Event Title */}
-          <h3 
+        {/* Location */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+          <MapPin style={{ width: '0.875rem', height: '0.875rem', color: '#efab38', flexShrink: 0 }} />
+          <span style={{ fontSize: '0.75rem', color: '#efab38', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {event.venue}, {event.locationName}
+          </span>
+        </div>
+
+        {/* Title */}
+        <div style={{ gap: '0.375rem' }}>
+          <h3
             onClick={() => onSelectEvent(event)}
-            className="text-xl font-display font-extrabold text-white group-hover:text-amber-300 transition-colors cursor-pointer line-clamp-1"
+            style={{
+              fontSize: '1.05rem', fontWeight: 700, color: '#f9f1df',
+              cursor: 'pointer', lineHeight: 1.3,
+              fontFamily: 'Libre Baskerville, serif',
+              overflow: 'hidden', display: '-webkit-box',
+              WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
+              transition: 'color 0.2s ease',
+            }}
+            className="group-hover:text-[#efab38]"
           >
             {event.name}
           </h3>
-
-          <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
+          <p style={{ fontSize: '0.75rem', color: 'rgba(249,241,223,0.5)', lineHeight: 1.5, marginTop: '0.25rem', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
             {event.description}
           </p>
         </div>
 
-        {/* Key Event Details Grid */}
-        <div className="grid grid-cols-2 gap-2 text-xs bg-festive-dark/60 p-3 rounded-2xl border border-purple-900/40">
-          <div className="flex items-center gap-2 text-slate-300">
-            <Calendar className="w-4 h-4 text-rose-400 flex-shrink-0" />
-            <span className="truncate font-medium">{event.dates}</span>
+        {/* Date & Time */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '0.75rem',
+          background: 'rgba(249,241,223,0.04)', border: '1px solid rgba(249,241,223,0.07)',
+          borderRadius: '0.75rem', padding: '0.5rem 0.75rem', fontSize: '0.72rem',
+          color: 'rgba(249,241,223,0.55)',
+        }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <Calendar style={{ width: '0.8rem', height: '0.8rem', color: '#d9573b' }} />
+            <span style={{ color: 'rgba(249,241,223,0.8)', fontWeight: 500 }}>{event.dates}</span>
+          </span>
+          <span style={{ color: 'rgba(249,241,223,0.2)' }}>|</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <Clock style={{ width: '0.8rem', height: '0.8rem', color: '#d9573b' }} />
+            <span style={{ color: 'rgba(249,241,223,0.8)', fontWeight: 500 }}>{event.startTime} – {event.endTime}</span>
+          </span>
+        </div>
+
+        {/* Capacity bar */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.7rem' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'rgba(249,241,223,0.5)' }}>
+              <Users style={{ width: '0.75rem', height: '0.75rem' }} />
+              {totalAvail} passes left
+            </span>
+            <span style={{ fontWeight: 700, color: barColor }}>{soldPercent}% filled</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-300">
-            <Clock className="w-4 h-4 text-rose-400 flex-shrink-0" />
-            <span className="truncate font-medium">{event.startTime} - {event.endTime}</span>
+          <div style={{ height: '5px', background: 'rgba(249,241,223,0.07)', borderRadius: '999px', overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${soldPercent}%`, background: barColor, borderRadius: '999px', transition: 'width 0.7s ease' }} />
           </div>
         </div>
 
-        {/* Artist Highlight */}
-        <div className="flex items-center gap-3 pt-1 border-t border-purple-900/40">
-          <img 
-            src={event.artistImage} 
+        {/* Artist */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', paddingTop: '0.25rem', borderTop: '1px solid rgba(249,241,223,0.07)' }}>
+          <img
+            src={event.artistImage}
             alt={event.artistName}
-            className="w-9 h-9 rounded-full object-cover border border-amber-400/50 flex-shrink-0"
+            style={{ width: '2rem', height: '2rem', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(239,171,56,0.4)', flexShrink: 0 }}
           />
-          <div className="truncate">
-            <p className="text-xs font-bold text-slate-200 truncate">{event.artistName}</p>
-            <p className="text-[10px] text-purple-300 truncate">{event.artistRole}</p>
+          <div style={{ minWidth: 0 }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'rgba(249,241,223,0.9)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.artistName}</p>
+            <p style={{ fontSize: '0.65rem', color: 'rgba(239,171,56,0.7)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.artistRole}</p>
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="pt-2 flex items-center gap-2">
+        {/* CTA Buttons */}
+        <div style={{ display: 'flex', gap: '0.625rem', paddingTop: '0.25rem' }}>
           <button
             onClick={() => onSelectEvent(event)}
-            className="w-1/2 py-2.5 px-3 rounded-xl text-xs font-bold border border-purple-700/60 text-purple-200 hover:bg-purple-900/40 hover:border-purple-500 transition-all text-center"
+            style={{
+              flex: 1, padding: '0.625rem', borderRadius: '0.75rem', fontSize: '0.75rem',
+              fontWeight: 600, border: '1px solid rgba(249,241,223,0.12)',
+              color: 'rgba(249,241,223,0.7)', background: 'transparent',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem',
+              transition: 'all 0.2s ease',
+              fontFamily: 'DM Sans, sans-serif',
+            }}
+            className="hover:border-[rgba(239,171,56,0.3)] hover:text-[#f9f1df]"
           >
-            View Details
+            Details <ArrowRight style={{ width: '0.75rem', height: '0.75rem' }} />
           </button>
-          
           <button
             onClick={() => onBookPass(event)}
-            className="w-1/2 py-2.5 px-3 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-500 via-teal-600 to-amber-500 hover:from-emerald-400 hover:to-amber-400 text-white shadow-md shadow-teal-950/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+            className="btn-whatsapp"
+            style={{ flex: 1.6, padding: '0.625rem', borderRadius: '0.75rem', fontSize: '0.75rem', justifyContent: 'center', gap: '0.375rem' }}
           >
-            <Ticket className="w-3.5 h-3.5" />
-            <span>Book Pass</span>
+            <Ticket style={{ width: '0.875rem', height: '0.875rem' }} />
+            Book Pass
           </button>
         </div>
 
       </div>
-    </div>
+    </article>
   );
 };

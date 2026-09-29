@@ -1,6 +1,5 @@
 import React from 'react';
-import { Sparkles, MapPin, Phone, Mail, ShieldCheck, Heart, Send } from 'lucide-react';
-import { LocationSlug } from '../../types';
+import { Sparkles, MapPin, Phone, Mail, ShieldCheck, Heart, Send, ArrowRight } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (path: string) => void;
@@ -8,126 +7,195 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
-    <footer className="bg-festive-darker border-t border-purple-900/60 pt-16 pb-12 text-slate-300 relative overflow-hidden">
-      {/* Glow decorative background elements */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-900/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-rose-900/10 rounded-full blur-3xl pointer-events-none" />
+    <footer className="relative overflow-hidden bg-festive-bg border-t border-white/[0.06] pt-20 pb-10">
+      {/* Background ambient glow */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-rose-900/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Newsletter & WhatsApp Opt-in CTA */}
-        <div className="bg-gradient-to-r from-festive-purple via-rose-950 to-indigo-950 p-8 rounded-3xl border border-rose-500/30 shadow-2xl mb-16 flex flex-col lg:flex-row items-center justify-between gap-6">
-          <div className="max-w-xl space-y-2 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Instant WhatsApp Alerts</span>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* ── WhatsApp CTA Strip ── */}
+        <div className="relative overflow-hidden rounded-3xl mb-16 p-8 sm:p-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-rose-900/50 to-amber-900/30" />
+          <div className="absolute inset-0 bg-mandala-dots opacity-25" style={{ backgroundSize: '24px 24px, 48px 48px' }} />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="text-center lg:text-left space-y-3 max-w-md">
+              <div className="section-label inline-flex">
+                <Sparkles className="w-3.5 h-3.5" />
+                Early Bird Alerts
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-display font-black text-white leading-tight">
+                Get VIP Garba Pass Alerts <br className="hidden sm:block" />
+                <span className="text-gradient-gold">Before Anyone Else</span>
+              </h3>
+              <p className="text-sm text-slate-300">
+                Join our WhatsApp VIP list for YMCA, Rajpath & Karnavati passes — Navratri 2026.
+              </p>
             </div>
-            <h3 className="text-2xl font-display font-extrabold text-white">
-              Get Early Bird Garba Pass Alerts & VIP Discounts
-            </h3>
-            <p className="text-xs text-purple-200">
-              Be the first to know when YMCA, Rajpath & Karnavati Garba passes open for Navratri 2026.
-            </p>
-          </div>
 
-          <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-3">
-            <input 
-              type="tel"
-              placeholder="Enter WhatsApp Number (+91)"
-              className="bg-festive-dark/90 border border-purple-500/40 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 w-full sm:w-72"
-            />
-            <button 
-              onClick={() => alert("Thank you! You have been subscribed to WhatsApp Garba alerts.")}
-              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-lg shadow-teal-950/50 flex items-center justify-center gap-2 transition-all"
-            >
-              <span>Join WhatsApp VIP</span>
-              <Send className="w-4 h-4" />
-            </button>
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-3">
+              <input
+                type="tel"
+                placeholder="Your WhatsApp number (+91)"
+                className="input-festive lg:w-64"
+              />
+              <button
+                onClick={() => alert('Thank you! You have been subscribed to WhatsApp Garba alerts.')}
+                className="btn-primary whitespace-nowrap py-3 px-6 rounded-xl text-sm"
+              >
+                <span>Join VIP List</span>
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Footer Navigation Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 mb-16">
-          
-          {/* Brand Info */}
-          <div className="lg:col-span-2 space-y-4">
+        {/* ── Footer Columns ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 mb-14">
+
+          {/* Brand */}
+          <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-700 p-0.5 flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center shadow-lg shadow-rose-950/40">
                 <span className="text-xl">🪔</span>
               </div>
-              <span className="font-display font-black text-2xl tracking-tight text-white">
-                GARBA PASS <span className="text-amber-400 text-lg">2026</span>
+              <div>
+                <span className="font-display font-black text-xl text-white tracking-tight">GARBA PASS</span>
+                <span className="ml-2 text-amber-400 font-black">2026</span>
+                <p className="text-[10px] text-purple-300/60 uppercase tracking-widest font-semibold">Ahmedabad • Gujarat</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-500 leading-relaxed max-w-sm">
+              Ahmedabad's premier online ticket portal for Navratri Garba 2026. Discover authentic events, compare pass tiers, and receive instant digital QR code passes.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="trust-item text-xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                100% Verified
+              </span>
+              <span className="trust-item text-xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                Instant QR Pass
               </span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              Ahmedabad's premier online ticket portal for Navratri Garba 2026. Discover authentic events, compare pass tiers, buy season tickets online, and receive instant digital QR code passes.
-            </p>
-            <div className="flex items-center gap-4 text-xs font-medium text-purple-300">
-              <span className="flex items-center gap-1.5 bg-purple-950/80 border border-purple-800/40 px-3 py-1.5 rounded-lg">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>100% Verified Events</span>
-              </span>
-              <span className="flex items-center gap-1.5 bg-purple-950/80 border border-purple-800/40 px-3 py-1.5 rounded-lg">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>Instant QR Gate Pass</span>
-              </span>
+
+            <div className="space-y-2">
+              <a
+                href="https://wa.me/916767676549"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2.5 text-sm text-emerald-400 hover:text-white transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/25 transition-colors">
+                  <Phone className="w-3.5 h-3.5" />
+                </div>
+                <span className="font-bold">+91 6767676549</span>
+              </a>
+              <a
+                href="mailto:info@garbapassahmedabad.com"
+                className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/15 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                  <Mail className="w-3.5 h-3.5 text-purple-400" />
+                </div>
+                <span>info@garbapassahmedabad.com</span>
+              </a>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display border-b border-purple-900/60 pb-2">
+          {/* Garba Categories */}
+          <div className="space-y-4">
+            <h4 className="text-xs font-black text-white uppercase tracking-wider font-display">
               Garba Categories
             </h4>
-            <ul className="space-y-2 text-xs">
-              <li><button onClick={() => onNavigate('/events')} className="hover:text-amber-400 transition-colors">All Garba Events 2026</button></li>
-              <li><button onClick={() => onNavigate('/garba-passes')} className="hover:text-amber-400 transition-colors">Daily Pass Booking</button></li>
-              <li><button onClick={() => onNavigate('/season-passes')} className="hover:text-amber-400 transition-colors">Full 9-Night Season Passes</button></li>
-              <li><button onClick={() => onNavigate('/garba-passes')} className="hover:text-amber-400 transition-colors">Couple & VIP Passes</button></li>
-              <li><button onClick={() => onNavigate('/garba-pass-ahmedabad')} className="hover:text-amber-400 transition-colors">Ahmedabad Garba Tickets</button></li>
+            <ul className="space-y-2.5 text-xs">
+              {[
+                { label: 'All Garba Events 2026',       path: '/events' },
+                { label: 'Daily Pass Booking',          path: '/garba-passes' },
+                { label: 'Full 9-Night Season Passes',  path: '/season-passes' },
+                { label: 'Couple & VIP Passes',         path: '/garba-passes' },
+                { label: 'Ahmedabad Garba Tickets',     path: '/garba-pass-ahmedabad' },
+              ].map(({ label, path }) => (
+                <li key={path}>
+                  <button
+                    onClick={() => onNavigate(path)}
+                    className="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5 group"
+                  >
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-amber-400" />
+                    {label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Popular Locations */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display border-b border-purple-900/60 pb-2">
+          {/* Locations */}
+          <div className="space-y-4">
+            <h4 className="text-xs font-black text-white uppercase tracking-wider font-display">
               Popular Locations
             </h4>
-            <ul className="space-y-2 text-xs">
-              <li><button onClick={() => onNavigate('/garba-pass-sg-highway')} className="hover:text-amber-400 transition-colors">Garba Pass SG Highway</button></li>
-              <li><button onClick={() => onNavigate('/garba-pass-bopal')} className="hover:text-amber-400 transition-colors">Garba Pass Bopal & South Bopal</button></li>
-              <li><button onClick={() => onNavigate('/garba-pass-satellite')} className="hover:text-amber-400 transition-colors">Garba Pass Satellite</button></li>
-              <li><button onClick={() => onNavigate('/garba-pass-prahlad-nagar')} className="hover:text-amber-400 transition-colors">Garba Pass Prahlad Nagar</button></li>
-              <li><button onClick={() => onNavigate('/garba-pass-thaltej')} className="hover:text-amber-400 transition-colors">Garba Pass Thaltej & GMDC</button></li>
-              <li><button onClick={() => onNavigate('/garba-pass-gota')} className="hover:text-amber-400 transition-colors">Garba Pass Gota</button></li>
-              <li><button onClick={() => onNavigate('/garba-pass-gandhinagar')} className="hover:text-amber-400 transition-colors">Garba Pass Gandhinagar</button></li>
+            <ul className="space-y-2.5 text-xs">
+              {[
+                { label: 'Garba Pass SG Highway',          path: '/garba-pass-sg-highway' },
+                { label: 'Garba Pass Bopal & South Bopal', path: '/garba-pass-bopal' },
+                { label: 'Garba Pass Satellite',           path: '/garba-pass-satellite' },
+                { label: 'Garba Pass Prahlad Nagar',       path: '/garba-pass-prahlad-nagar' },
+                { label: 'Garba Pass Thaltej & GMDC',      path: '/garba-pass-thaltej' },
+                { label: 'Garba Pass Gandhinagar',         path: '/garba-pass-gandhinagar' },
+              ].map(({ label, path }) => (
+                <li key={path}>
+                  <button
+                    onClick={() => onNavigate(path)}
+                    className="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5 group"
+                  >
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-amber-400" />
+                    {label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Support & Legal */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider font-display border-b border-purple-900/60 pb-2">
-              Customer Support
+          {/* Support */}
+          <div className="space-y-4">
+            <h4 className="text-xs font-black text-white uppercase tracking-wider font-display">
+              Support & Legal
             </h4>
-            <ul className="space-y-2 text-xs">
-              <li><button onClick={() => onNavigate('/navratri-2026-guide')} className="hover:text-amber-400 transition-colors">Navratri 2026 Guide</button></li>
-              <li><button onClick={() => onNavigate('/faq')} className="hover:text-amber-400 transition-colors">Frequently Asked Questions</button></li>
-              <li><button onClick={() => onNavigate('/contact')} className="hover:text-amber-400 transition-colors">Contact Support</button></li>
-              <li><button onClick={() => onNavigate('/terms')} className="hover:text-amber-400 transition-colors">Terms of Service</button></li>
-              <li><button onClick={() => onNavigate('/privacy')} className="hover:text-amber-400 transition-colors">Privacy Policy</button></li>
-              <li><button onClick={() => onNavigate('/refund-policy')} className="hover:text-amber-400 transition-colors">Refund & Cancellation Policy</button></li>
+            <ul className="space-y-2.5 text-xs">
+              {[
+                { label: 'Navratri 2026 Guide',       path: '/navratri-2026-guide' },
+                { label: 'FAQ',                        path: '/faq' },
+                { label: 'Contact Support',            path: '/contact' },
+                { label: 'Terms of Service',           path: '/terms' },
+                { label: 'Privacy Policy',             path: '/privacy' },
+                { label: 'Refund & Cancellation',      path: '/refund-policy' },
+              ].map(({ label, path }) => (
+                <li key={path}>
+                  <button
+                    onClick={() => onNavigate(path)}
+                    className="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5 group"
+                  >
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-amber-400" />
+                    {label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
         </div>
 
-        {/* Bottom Copyright Bar */}
-        <div className="pt-8 border-t border-purple-900/40 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        {/* ── Bottom Bar ── */}
+        <div className="pt-8 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 gap-3">
           <p>© 2026 Navratri Garba Pass Ahmedabad. Official Booking Partner. All Rights Reserved.</p>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              Made with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for Gujarat Navratri
-            </span>
+          <div className="flex items-center gap-2">
+            <span>Made with</span>
+            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+            <span>for Gujarat Navratri</span>
           </div>
         </div>
 
