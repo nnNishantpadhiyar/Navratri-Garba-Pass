@@ -7,30 +7,29 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
-    <footer className="relative overflow-hidden bg-festive-bg border-t border-white/[0.06] pt-20 pb-10">
-      {/* Background ambient glow */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-rose-900/10 rounded-full blur-[100px] pointer-events-none" />
+    <footer className="relative overflow-hidden bg-[#060b1c] border-t border-yellow-400/15 pt-20 pb-10">
+      {/* Background ambient royal blue glow */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-yellow-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── WhatsApp CTA Strip ── */}
-        <div className="relative overflow-hidden rounded-3xl mb-16 p-8 sm:p-10">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-rose-900/50 to-amber-900/30" />
-          <div className="absolute inset-0 bg-mandala-dots opacity-25" style={{ backgroundSize: '24px 24px, 48px 48px' }} />
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
+        {/* ── WhatsApp CTA Strip in Yellow & Blue ── */}
+        <div className="relative overflow-hidden rounded-3xl mb-16 p-8 sm:p-10 border border-yellow-400/25 shadow-xl shadow-blue-950/60">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/85 via-blue-950/90 to-[#0a1128]" />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-400/70 to-transparent" />
 
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-left space-y-3 max-w-md">
-              <div className="section-label inline-flex">
-                <Sparkles className="w-3.5 h-3.5" />
+              <div className="section-label inline-flex shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
                 Early Bird Alerts
               </div>
               <h3 className="text-2xl sm:text-3xl font-display font-black text-white leading-tight">
                 Get VIP Garba Pass Alerts <br className="hidden sm:block" />
                 <span className="text-gradient-gold">Before Anyone Else</span>
               </h3>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-blue-100/75">
                 Join our WhatsApp VIP list for YMCA, Rajpath & Karnavati passes — Navratri 2026.
               </p>
             </div>
@@ -43,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               />
               <button
                 onClick={() => alert('Thank you! You have been subscribed to WhatsApp Garba alerts.')}
-                className="btn-primary whitespace-nowrap py-3 px-6 rounded-xl text-sm"
+                className="btn-primary whitespace-nowrap py-3 px-6 rounded-xl text-sm font-bold flex items-center justify-center gap-2"
               >
                 <span>Join VIP List</span>
                 <Send className="w-4 h-4" />
@@ -58,17 +57,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Brand */}
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center shadow-lg shadow-rose-950/40">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-400 via-amber-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-900/40">
                 <span className="text-xl">🪔</span>
               </div>
               <div>
                 <span className="font-display font-black text-xl text-white tracking-tight">GARBA PASS</span>
-                <span className="ml-2 text-amber-400 font-black">2026</span>
-                <p className="text-[10px] text-purple-300/60 uppercase tracking-widest font-semibold">Ahmedabad • Gujarat</p>
+                <span className="ml-2 text-yellow-400 font-black">2026</span>
+                <p className="text-[10px] text-blue-200/60 uppercase tracking-widest font-semibold">Ahmedabad • Gujarat</p>
               </div>
             </div>
 
-            <p className="text-xs text-slate-500 leading-relaxed max-w-sm">
+            <p className="text-xs text-blue-200/60 leading-relaxed max-w-sm">
               Ahmedabad's premier online ticket portal for Navratri Garba 2026. Discover authentic events, compare pass tiers, and receive instant digital QR code passes.
             </p>
 
@@ -78,17 +77,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 100% Verified
               </span>
               <span className="trust-item text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
                 Instant QR Pass
               </span>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 pt-2">
               <a
                 href="https://wa.me/916767676549"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2.5 text-sm text-emerald-400 hover:text-white transition-colors group"
+                className="flex items-center gap-2.5 text-sm text-emerald-400 hover:text-yellow-300 transition-colors group"
               >
                 <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/25 transition-colors">
                   <Phone className="w-3.5 h-3.5" />
@@ -97,10 +96,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </a>
               <a
                 href="mailto:info@garbapassahmedabad.com"
-                className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group"
+                className="flex items-center gap-2.5 text-sm text-blue-200/60 hover:text-white transition-colors group"
               >
-                <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/15 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
-                  <Mail className="w-3.5 h-3.5 text-purple-400" />
+                <div className="w-8 h-8 rounded-xl bg-blue-900/30 border border-blue-700/30 flex items-center justify-center group-hover:bg-blue-800/40 transition-colors">
+                  <Mail className="w-3.5 h-3.5 text-yellow-400" />
                 </div>
                 <span>info@garbapassahmedabad.com</span>
               </a>
@@ -123,9 +122,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <li key={path}>
                   <button
                     onClick={() => onNavigate(path)}
-                    className="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5 group"
+                    className="text-blue-200/60 hover:text-yellow-400 transition-colors flex items-center gap-1.5 group"
                   >
-                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-amber-400" />
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-yellow-400" />
                     {label}
                   </button>
                 </li>
@@ -150,9 +149,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <li key={path}>
                   <button
                     onClick={() => onNavigate(path)}
-                    className="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5 group"
+                    className="text-blue-200/60 hover:text-yellow-400 transition-colors flex items-center gap-1.5 group"
                   >
-                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-amber-400" />
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-yellow-400" />
                     {label}
                   </button>
                 </li>
@@ -177,9 +176,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <li key={path}>
                   <button
                     onClick={() => onNavigate(path)}
-                    className="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5 group"
+                    className="text-blue-200/60 hover:text-yellow-400 transition-colors flex items-center gap-1.5 group"
                   >
-                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-amber-400" />
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all text-yellow-400" />
                     {label}
                   </button>
                 </li>
@@ -190,11 +189,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         {/* ── Bottom Bar ── */}
-        <div className="pt-8 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 gap-3">
+        <div className="pt-8 border-t border-yellow-400/10 flex flex-col sm:flex-row items-center justify-between text-xs text-blue-300/50 gap-3">
           <p>© 2026 Navratri Garba Pass Ahmedabad. Official Booking Partner. All Rights Reserved.</p>
           <div className="flex items-center gap-2">
             <span>Made with</span>
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+            <Heart className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
             <span>for Gujarat Navratri</span>
           </div>
         </div>

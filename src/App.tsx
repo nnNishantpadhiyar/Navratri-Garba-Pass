@@ -180,7 +180,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen text-[#f9f1df] flex flex-col font-sans selection:bg-[#efab38] selection:text-[#262346]" style={{background:'#262346'}}>
+    <div className="min-h-screen text-[#f8fafc] flex flex-col font-sans selection:bg-[#facc15] selection:text-[#0a1128]" style={{background:'#0a1128'}}>
       
       {/* Sticky Top Navbar */}
       <Navbar
@@ -227,7 +227,7 @@ export const App: React.FC = () => {
             </div>
 
             <div className="search-bar">
-              <Search className="w-5 h-5 text-amber-400 flex-shrink-0" />
+              <Search className="w-5 h-5 text-yellow-400 flex-shrink-0" />
               <input
                 type="text"
                 autoFocus
@@ -249,13 +249,13 @@ export const App: React.FC = () => {
                   <div
                     key={evt.id}
                     onClick={() => { navigateTo(`/events/${evt.slug}`); setSearchModalOpen(false); }}
-                    className="p-3.5 bg-white/[0.03] hover:bg-white/[0.07] rounded-xl border border-white/[0.06] hover:border-amber-500/25 cursor-pointer flex items-center justify-between gap-3 transition-all group"
+                    className="p-3.5 bg-blue-950/40 hover:bg-blue-900/40 rounded-xl border border-blue-800/40 hover:border-yellow-400/50 cursor-pointer flex items-center justify-between gap-3 transition-all group"
                   >
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors truncate">{evt.name}</p>
-                      <p className="text-xs text-slate-500 truncate">{evt.venue} • {evt.locationName}</p>
+                      <p className="text-sm font-bold text-white group-hover:text-yellow-300 transition-colors truncate">{evt.name}</p>
+                      <p className="text-xs text-blue-200/60 truncate">{evt.venue} • {evt.locationName}</p>
                     </div>
-                    <span className="text-sm font-black text-amber-400 shrink-0">₹{evt.startingPrice.toLocaleString('en-IN')}</span>
+                    <span className="text-sm font-black text-yellow-400 shrink-0">₹{evt.startingPrice.toLocaleString('en-IN')}</span>
                   </div>
                 ))}
               {eventsList.filter(e =>
